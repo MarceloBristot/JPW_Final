@@ -1,6 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import { autenticar } from '../services/UserService'
+import { Button, TextField, Checkbox, FormControl, Box } from '@material-ui/core'
 
 export default class Login extends React.Component {
     constructor(props) {
@@ -33,20 +34,23 @@ export default class Login extends React.Component {
             this.props.handleToken(this.state.token)
             this.props.history.push('/clientes')
         })
-
-
     }
 
     render() {
         return <div>
-            <form onSubmit={this.login}>
-                <span>Email </span>
-                <input type="text" name="login" onChange={this.handleChange}></input>
-                <br></br>
-                <span>Senha </span>
-                <input type="password" name="senha" onChange={this.handleChange}></input>
-                <button type="submit">Entrar</button>
-            </form>
+            <div>
+                <head>
+                    <meta
+                        name="viewport"
+                        content="minimum-scale=1, initial-scale=1, width=device-width"
+                    />
+                </head>
+            </div>
+            <FormControl>
+                <TextField id="standard-basic" type="text" name="login" label="Email" onChange={this.handleChange} />
+                <TextField id="standard-basic" type="password" name="senha" label="Senha" onChange={this.handleChange} />
+                <Button onClick={this.login} variant="contained" color="primary" type="submit">Entrar</Button>
+            </FormControl>
         </div>
     }
 }

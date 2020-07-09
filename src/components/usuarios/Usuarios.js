@@ -1,10 +1,10 @@
 import React from 'react'
-import ClienteModel from './ClienteModel'
-import { getClientes, deleteClientes } from '../../services/ClienteService'
+import UsuarioModel from './UsuarioModel'
+import { getUsuarios, deleteUsuarios } from '../../services/UserService'
 import axios from 'axios'
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@material-ui/core';
 
-export default class Clientes extends React.Component {
+export default class Usuarios extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -15,11 +15,11 @@ export default class Clientes extends React.Component {
             this.props.history.push('/')
     }
     componentDidMount = () => {
-        this.getAllClientes()
+        this.getAllUsuarios()
     }
 
-    getAllClientes = () => {
-        getClientes(this.state.token, (res) => {
+    getAllUsuarios = () => {
+        getUsuarios(this.state.token, (res) => {
             this.setState({
                 clientes: [...res.data]
             });
@@ -31,7 +31,7 @@ export default class Clientes extends React.Component {
 
     delete = (id) => {
         axios.delete('http://localhost:1998/clientes/' + id, { headers: { authorization: this.state.token } }).then((res) => {
-            this.getAllClientes();
+            this.getAllUsuarios();
         }).catch((error) => {
             console.log(error);
         })
@@ -46,9 +46,8 @@ export default class Clientes extends React.Component {
                             <TableHead>
                                 <TableRow>
                                     <TableCell align="center">Nome</TableCell>
-                                    <TableCell align="center">Cidade</TableCell>
-                                    <TableCell align="center">UF</TableCell>
-                                    <TableCell align="center">País</TableCell>
+                                    <TableCell align="center">Sigla</TableCell>
+                                    <TableCell align="center">Login</TableCell>
                                     <TableCell align="center">Ações</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -59,16 +58,15 @@ export default class Clientes extends React.Component {
                                                 {item._id}
                                             </TableCell> */}
                                         <TableCell align="center">{item.nome}</TableCell>
-                                        <TableCell align="center">{item.cidade}</TableCell>
-                                        <TableCell align="center">{item.uf}</TableCell>
-                                        <TableCell align="center">{item.pais}</TableCell>
+                                        <TableCell align="center">{item.sigla}</TableCell>
+                                        <TableCell align="center">{item.login}</TableCell>
                                         <TableCell align="center">
                                             <Button type="button" variant="contained">Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                                <ClienteModel token={this.state.token}></ClienteModel>
+                                <UsuarioModel token={this.state.token}></UsuarioModel>
 
                             </TableBody>
                         </Table>

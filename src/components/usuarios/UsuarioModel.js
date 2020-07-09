@@ -1,12 +1,11 @@
 import React from 'react'
-import { addClientes, getClientes } from '../../services/ClienteService'
+import { addUsuarios, getUsuarios } from '../../services/UserService'
 import axios from 'axios'
 import { Button, TextField, Checkbox, FormControl, Box } from '@material-ui/core'
-export default class ClienteModel extends React.Component {
+export default class UsuarioModel extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            //cliente: this.props.cliente ? this.props.cliente : {
             nome: "",
             cidade: "",
             uf: "",
@@ -22,19 +21,19 @@ export default class ClienteModel extends React.Component {
         })
     }
 
-    addCliente = () => {
+    addUsuario = () => {
         //e.preventDefault();
-        axios.post('http://localhost:1998/clientes', this.state, { headers: { authorization: this.props.token } }).then((res) => {
-            this.getAllClientes();
+        axios.post('http://localhost:1998/usuarios', this.state, { headers: { authorization: this.props.token } }).then((res) => {
+            this.getAllUsuarios();
         }).catch((error) => {
             console.log(error);
         })
     }
 
-    getAllClientes = () => {
-        getClientes(this.state.token, (res) => {
+    getAllUsuarios = () => {
+        getUsuarios(this.state.token, (res) => {
             this.setState({
-                clientes: [...res.data]
+                usuarios: [...res.data]
             });
         }, (error) => {
             console.log(error)
@@ -49,12 +48,8 @@ export default class ClienteModel extends React.Component {
                 <TextField id="standard-basic" type="text" name="cidade"label="Cidade" onChange={this.handleChange} />
                 <TextField id="standard-basic" type="text" name="uf" label="UF" onChange={this.handleChange} />
                 <TextField id="standard-basic" type="text" name="pais" label="País" onChange={this.handleChange} />
-                <Button onClick={this.addCliente} variant="contained" color="primary" type="submit">Adicionar</Button>
+                <Button onClick={this.addUsuario} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
-            {/* {this.state.cliente.nome ? this.state.cliente.nome : ''}
-            {this.state.cliente.cidade ? this.state.cliente.nome : ''}
-            {this.state.cliente.uf ? this.state.cliente.nome : ''}
-            {this.state.cliente.pais ? this.state.cliente.nome : ''} */}
         </div>
     }
 }
