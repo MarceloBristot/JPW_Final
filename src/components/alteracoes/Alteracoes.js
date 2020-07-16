@@ -38,6 +38,12 @@ export default class Alteracoes extends React.Component {
         getAlteracoes(this.state.token, (res) => {
 
             res.data.forEach(element => {
+                element.comentario = ''
+                element.comentarios.forEach(com => {
+                    element.comentario += com.conteudo
+                })
+
+
                 arrProd.forEach(a => {
                     if (element.produto == a._id)
                         element.nomeProduto = a.nome;
@@ -83,6 +89,7 @@ export default class Alteracoes extends React.Component {
                                     <TableCell align="center">Comentário</TableCell>
                                     <TableCell align="center">Usuário</TableCell>
                                     <TableCell align="center">Produto</TableCell>
+                                    <TableCell align="center">Data Registro</TableCell>
                                     <TableCell align="center">
                                         <Button type="button" variant="contained" color="primary" onClick={this.adicionar}>Adicionar</Button>
                                     </TableCell>
@@ -94,9 +101,10 @@ export default class Alteracoes extends React.Component {
                                         {/* <TableCell component="th" scope="row">
                                                 {item._id}
                                             </TableCell> */}
-                                        <TableCell align="center">{item.comentarios}</TableCell>
+                                        <TableCell align="center">{item.comentario}</TableCell>
                                         <TableCell align="center">{item.nomeCliente}</TableCell>
                                         <TableCell align="center">{item.nomeProduto}</TableCell>
+                                        <TableCell align="center">{item.dataRegistro}</TableCell>
                                         <TableCell align="center">
                                             <Button type="button" variant="contained" onClick={this.editar.bind(this, item._id)}>Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>

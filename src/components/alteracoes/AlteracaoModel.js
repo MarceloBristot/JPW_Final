@@ -11,7 +11,6 @@ export default class AlteracaoModel extends React.Component {
         this.state = {
             //projeto: this.props.projeto ? this.props.projeto : {
             comentario: "",
-            comentarios: [],
             produto: null,
             cliente: null,
             produtos: [],
@@ -60,10 +59,15 @@ export default class AlteracaoModel extends React.Component {
 
         if (this.state.id) {
             axios.get('http://localhost:1998/alteracoes/' + this.state.id, { headers: { authorization: this.state.token } }).then((res) => {
+                var comment = '';
+                res.data.comentarios.forEach(com => {
+                    comment = com;
+                })
+
                 this.setState({
-                    comentario: res.data.comentario,
+                    comentario: comment.conteudo,
                     produto: res.data.produto,
-                    cliente: res.data.cliente,
+                    // cliente: res.data.cliente,
                 });
             }).catch((error) => {
                 console.log(error);
@@ -79,12 +83,11 @@ export default class AlteracaoModel extends React.Component {
     }
 
     addAlteracao = () => {
-        if (this.state.comentario == "" || this.state.produto == null || this.state.cliente == null) {
+        if (this.state.comentario == "" || this.state.produto == null) {//} || this.state.cliente == null) {
             alert("Favor preencher todos os campos!");
             return;
         }
-
-        this.state.comentarios.push(this.state.comentario)
+        this.state.comentarios.push({ conteudo: this.state.comentario })
 
         if (this.state.id) {
             axios.put('http://localhost:1998/alteracoes/' + this.state.id, this.state, { headers: { authorization: this.props.token } }).then((res) => {
@@ -134,7 +137,7 @@ export default class AlteracaoModel extends React.Component {
                 <br></br>
 
                 {/* <InputLabel>Cliente</InputLabel> */}
-                <Select
+                {/* <Select
                     native
                     onChange={this.handleChange}
                     inputProps={{
@@ -145,7 +148,7 @@ export default class AlteracaoModel extends React.Component {
                     <option aria-label="None" value="" />
                     {this.state.clientes}
                 </Select>
-                Cliente
+                Cliente */}
                 <Button onClick={this.addAlteracao} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
         </div>
