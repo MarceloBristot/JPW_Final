@@ -11,6 +11,8 @@ import ProjetoModel from './projetos/ProjetoModel'
 import UsuarioModel from './usuarios/UsuarioModel'
 import ProdutoModel from './produtos/ProdutoModel'
 import ClienteModel from './clientes/ClienteModel'
+import AlteracaoModel from './alteracoes/AlteracaoModel'
+import Alteracoes from './alteracoes/Alteracoes'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -43,6 +45,8 @@ export default class Home extends React.Component {
                         <Switch>
                             <Route exact path={'/'} render={props => <Login {...props} handleToken={this.handleToken} />} />
                             <Route exact path={'/entrar'} render={props => <UsuarioModel {...props} />} />
+                            <Route exact path={'/alteracoes'} render={props => <Alteracoes {...props} token={this.state.token} />} />
+                            <Route exact path={'/editaralteracao'} render={props => <AlteracaoModel {...props} token={this.state.token} />} />
                             <Route exact path={'/clientes'} render={props => <Clientes {...props} token={this.state.token} />} />
                             <Route exact path={'/editarcliente'} render={props => <ClienteModel {...props} token={this.state.token} />} />
                             <Route exact path={'/usuarios'} render={props => <Usuarios {...props} token={this.state.token} />} />
