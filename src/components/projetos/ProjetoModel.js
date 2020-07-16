@@ -1,5 +1,5 @@
 import React from 'react'
-import { addProjetos, getProjetos } from '../../services/ProjetoService'
+import { addProjetos, getProjetos, getProjeto } from '../../services/ProjetoService'
 import { getProdutos } from '../../services/ProdutoService'
 import { getClientes } from '../../services/ClienteService'
 import axios from 'axios'
@@ -12,12 +12,11 @@ export default class ProjetoModel extends React.Component {
             nome: "",
             produto: null,
             cliente: null,
-            uf: "",
-            pais: "",
             produtos: [],
-            clientes: []
+            clientes: [],
+            id: this.props.location.state ? this.props.location.state.id : null,
             //},
-            //token: this.props.token
+            token: this.props.token
         }
     }
 
@@ -46,6 +45,29 @@ export default class ProjetoModel extends React.Component {
             console.log(error)
         })
 
+        if (this.state.id) {
+            axios.get('http://localhost:1998/projetos/' + this.state.id, { headers: { authorization: this.state.token } }).then((res) => {
+                this.setState({
+                    nome: res.data.nome,
+                    produto: res.data.produto,
+                    cliente: res.data.cliente,
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+            // getProjeto({ id: this.state.id }, this.props.token, (res) => {
+
+            //     this.setState({
+            //         nome: res.data.nome,
+            //         produto: res.data.produto,
+            //         cliente: res.data.cliente,
+            //         produto: res.data.produto
+            //     });
+            // }, (error) => {
+            //     console.log(error)
+            // })
+        }
+
     }
 
     handleChange = (item) => {
@@ -55,12 +77,26 @@ export default class ProjetoModel extends React.Component {
     }
 
     addProjeto = () => {
-        //e.preventDefault();
-        axios.post('http://localhost:1998/projetos', this.state, { headers: { authorization: this.props.token } }).then((res) => {
-            this.getAllProjetos();
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (this.state.nome == "" || this.state.produto == null || this.state.cliente == null) {
+            alert("Favor preencher todos os campos!");
+            return;
+        }
+
+        if (this.state.id) {
+            axios.put('http://localhost:1998/projetos/' + this.state.id, this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/projetos');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            //e.preventDefault();
+            axios.post('http://localhost:1998/projetos', this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/projetos');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
 
     getAllProjetos = () => {
@@ -76,8 +112,9 @@ export default class ProjetoModel extends React.Component {
     render() {
         return <div>
             <FormControl>
-                <TextField id="standard-basic" type="text" name="nome" label="Nome" onChange={this.handleChange} />
-                <InputLabel>Produto</InputLabel>
+                <TextField id="standard-basic" type="text" name="nome" value={this.state.nome} onChange={this.handleChange} />
+                {/* <InputLabel>Produto</InputLabel> */}
+                Nome
                 <Select
                     native
                     onChange={this.handleChange}
@@ -89,6 +126,10 @@ export default class ProjetoModel extends React.Component {
                     <option aria-label="None" value="" />
                     {this.state.produtos}
                 </Select>
+                Produto
+                <br></br>
+
+                {/* <InputLabel>Cliente</InputLabel> */}
                 <Select
                     native
                     onChange={this.handleChange}
@@ -100,6 +141,7 @@ export default class ProjetoModel extends React.Component {
                     <option aria-label="None" value="" />
                     {this.state.clientes}
                 </Select>
+                Cliente
                 <Button onClick={this.addProjeto} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
         </div>

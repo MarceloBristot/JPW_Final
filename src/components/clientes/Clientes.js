@@ -37,6 +37,14 @@ export default class Clientes extends React.Component {
         })
     }
 
+    editar = (id) => {
+        this.props.history.push({ pathname: '/editarcliente', state: { id: id } })
+    }
+
+    adicionar = (id) => {
+        this.props.history.push('/editarcliente')
+    }
+
     render() {
         return (
             <div>
@@ -49,7 +57,9 @@ export default class Clientes extends React.Component {
                                     <TableCell align="center">Cidade</TableCell>
                                     <TableCell align="center">UF</TableCell>
                                     <TableCell align="center">País</TableCell>
-                                    <TableCell align="center">Ações</TableCell>
+                                    <TableCell align="center">
+                                        <Button type="button" variant="contained" color="primary" onClick={this.adicionar}>Adicionar</Button>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -63,12 +73,11 @@ export default class Clientes extends React.Component {
                                         <TableCell align="center">{item.uf}</TableCell>
                                         <TableCell align="center">{item.pais}</TableCell>
                                         <TableCell align="center">
-                                            <Button type="button" variant="contained">Editar</Button>
+                                            <Button type="button" variant="contained" onClick={this.editar.bind(this, item._id)}>Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                                <ClienteModel token={this.state.token}></ClienteModel>
 
                             </TableBody>
                         </Table>

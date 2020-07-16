@@ -10,10 +10,27 @@ export default class ClienteModel extends React.Component {
             nome: "",
             cidade: "",
             uf: "",
-            pais: ""
+            pais: "",
+            id: this.props.location.state ? this.props.location.state.id : null,
             //},
-            //token: this.props.token
+            token: this.props.token
         }
+    }
+
+    componentDidMount = () => {
+        if (this.state.id) {
+            axios.get('http://localhost:1998/clientes/' + this.state.id, { headers: { authorization: this.state.token } }).then((res) => {
+                this.setState({
+                    nome: res.data.nome,
+                    cidade: res.data.cidade,
+                    uf: res.data.uf,
+                    pais: res.data.pais,
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+
     }
 
     handleChange = (item) => {
@@ -23,12 +40,26 @@ export default class ClienteModel extends React.Component {
     }
 
     addCliente = () => {
-        //e.preventDefault();
-        axios.post('http://localhost:1998/clientes', this.state, { headers: { authorization: this.props.token } }).then((res) => {
-            this.getAllClientes();
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (this.state.nome == "" || this.state.cidade == null || this.state.uf == null) {
+            alert("Favor preencher todos os campos!");
+            return;
+        }
+
+        if (this.state.id) {
+            axios.put('http://localhost:1998/clientes/' + this.state.id, this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/clientes');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            //e.preventDefault();
+            axios.post('http://localhost:1998/clientes', this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/clientes');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
 
     getAllClientes = () => {
@@ -45,11 +76,14 @@ export default class ClienteModel extends React.Component {
     render() {
         return <div>
             <FormControl>
-                <TextField id="standard-basic" required="true" type="text" name="nome" label="Nome" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="cidade"label="Cidade" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="uf" label="UF" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="pais" label="País" onChange={this.handleChange} />
-                <Button onClick={this.addCliente} variant="contained" color="primary" type="submit">Adicionar</Button>
+                <TextField id="standard-basic" required="true" type="text" name="nome"  value={this.state.nome} onChange={this.handleChange} />
+                Nome
+                <TextField id="standard-basic" type="text" name="cidade" value={this.state.cidade} onChange={this.handleChange} />
+                Cidade
+                <TextField id="standard-basic" type="text" name="uf" value={this.state.uf} onChange={this.handleChange} />
+                UF
+                <TextField id="standard-basic" type="text" name="pais" value={this.state.pais} onChange={this.handleChange} />
+                País<Button onClick={this.addCliente} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
             {/* {this.state.cliente.nome ? this.state.cliente.nome : ''}
             {this.state.cliente.cidade ? this.state.cliente.nome : ''}

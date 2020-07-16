@@ -2,6 +2,14 @@ import axios from 'axios'
 
 const BASE_URL = 'http://localhost:1998'
 
+export const getProjeto = (data, token, success, onError) => {
+    axios.get(BASE_URL + '/projetos/' + data._id, { headers: { authorization: token } }).then((res) => {
+        success(res);
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+
 export const getProjetos = (token, success, onError) => {
     axios.get(BASE_URL + '/projetos', { headers: { authorization: token } }).then((res) => {
         success(res);

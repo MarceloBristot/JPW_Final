@@ -7,12 +7,29 @@ export default class UsuarioModel extends React.Component {
         super(props)
         this.state = {
             nome: "",
-            cidade: "",
-            uf: "",
-            pais: ""
+            login: "",
+            sigla: "",
+            senha: "",
+            id: this.props.location.state ? this.props.location.state.id : null,
             //},
-            //token: this.props.token
+            token: this.props.token
         }
+    }
+
+    componentDidMount = () => {
+        if (this.state.id) {
+            axios.get('http://localhost:1998/usuarios/' + this.state.id, { headers: { authorization: this.state.token } }).then((res) => {
+                this.setState({
+                    nome: res.data.nome,
+                    login: res.data.login,
+                    sigla: res.data.sigla,
+                    senha: res.data.senha
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+
     }
 
     handleChange = (item) => {
@@ -22,13 +39,28 @@ export default class UsuarioModel extends React.Component {
     }
 
     addUsuario = () => {
-        //e.preventDefault();
-        axios.post('http://localhost:1998/usuarios', this.state, { headers: { authorization: this.props.token } }).then((res) => {
-            this.getAllUsuarios();
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (this.state.nome == "" || this.state.sigla == null || this.state.login == null) {
+            alert("Favor preencher todos os campos!");
+            return;
+        }
+
+        if (this.state.id) {
+            axios.put('http://localhost:1998/usuarios/' + this.state.id, this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/usuarios');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            //e.preventDefault();
+            axios.post('http://localhost:1998/usuarios', this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/usuarios');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
+
 
     getAllUsuarios = () => {
         getUsuarios(this.state.token, (res) => {
@@ -44,10 +76,14 @@ export default class UsuarioModel extends React.Component {
     render() {
         return <div>
             <FormControl>
-                <TextField id="standard-basic" required="true" type="text" name="nome" label="Nome" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="cidade"label="Cidade" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="uf" label="UF" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="pais" label="País" onChange={this.handleChange} />
+                <TextField id="standard-basic" required="true" type="text" name="nome" value={this.state.nome} onChange={this.handleChange} />
+                Nome 
+                <TextField id="standard-basic" type="text" name="sigla" value={this.state.sigla} onChange={this.handleChange} />
+                Sigla
+                <TextField id="standard-basic" type="text" name="login" value={this.state.login}  onChange={this.handleChange} />
+                Login
+                <TextField disable={this.props.location.state} id="standard-basic" type="password" name="senha" value={this.state.senha} onChange={this.handleChange} />
+                Senha
                 <Button onClick={this.addUsuario} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
         </div>

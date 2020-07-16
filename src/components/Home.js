@@ -7,6 +7,10 @@ import Usuarios from './usuarios/Usuarios'
 import Header from './Header'
 import { Container, Box } from "@material-ui/core";
 import Projetos from './projetos/Projetos'
+import ProjetoModel from './projetos/ProjetoModel'
+import UsuarioModel from './usuarios/UsuarioModel'
+import ProdutoModel from './produtos/ProdutoModel'
+import ClienteModel from './clientes/ClienteModel'
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -38,11 +42,15 @@ export default class Home extends React.Component {
                     <BrowserRouter>
                         <Switch>
                             <Route exact path={'/'} render={props => <Login {...props} handleToken={this.handleToken} />} />
-                            <Route exact path={'/entrar'}></Route>
+                            <Route exact path={'/entrar'} render={props => <UsuarioModel {...props} />} />
                             <Route exact path={'/clientes'} render={props => <Clientes {...props} token={this.state.token} />} />
+                            <Route exact path={'/editarcliente'} render={props => <ClienteModel {...props} token={this.state.token} />} />
                             <Route exact path={'/usuarios'} render={props => <Usuarios {...props} token={this.state.token} />} />
+                            <Route exact path={'/editarusuario'} render={props => <UsuarioModel {...props} token={this.state.token} />} />
                             <Route exact path={'/projetos'} render={props => <Projetos {...props} token={this.state.token} />} />
+                            <Route exact path={'/editarprojeto'} render={props => <ProjetoModel {...props} token={this.state.token} />} />
                             <Route exact path={'/produtos'} render={props => <Produtos {...props} token={this.state.token} />} />
+                            <Route exact path={'/editarproduto'} render={props => <ProdutoModel {...props} token={this.state.token} />} />
                         </Switch>
                     </BrowserRouter>
                 </Container>

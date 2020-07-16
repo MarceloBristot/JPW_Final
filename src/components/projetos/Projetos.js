@@ -63,11 +63,19 @@ export default class Projetos extends React.Component {
             console.log(error);
         })
     }
+    editar = (id) => {
+        this.props.history.push({ pathname: '/editarprojeto', state: { id: id } })
+    }
+
+    adicionar = (id) => {
+        this.props.history.push('/editarprojeto')
+    }
 
     render() {
         return (
             <div>
                 <div>
+                    <br></br>
                     <TableContainer component={Paper}>
                         <Table className="row" aria-label="simple table">
                             <TableHead>
@@ -75,7 +83,9 @@ export default class Projetos extends React.Component {
                                     <TableCell align="center">Nome</TableCell>
                                     <TableCell align="center">Cliente</TableCell>
                                     <TableCell align="center">Produto</TableCell>
-                                    <TableCell align="center">Ações</TableCell>
+                                    <TableCell align="center">
+                                        <Button type="button" variant="contained" color="primary" onClick={this.adicionar}>Adicionar</Button>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -88,12 +98,12 @@ export default class Projetos extends React.Component {
                                         <TableCell align="center">{item.nomeCliente}</TableCell>
                                         <TableCell align="center">{item.nomeProduto}</TableCell>
                                         <TableCell align="center">
-                                            <Button type="button" variant="contained">Editar</Button>
+                                            <Button type="button" variant="contained" onClick={this.editar.bind(this, item._id)}>Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                                <ProjetoModel token={this.state.token}></ProjetoModel>
+                                {/* <ProjetoModel token={this.state.token}></ProjetoModel> */}
 
                             </TableBody>
                         </Table>

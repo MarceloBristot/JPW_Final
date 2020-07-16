@@ -8,26 +8,53 @@ export default class ProdutoModel extends React.Component {
         this.state = {
             //cliente: this.props.cliente ? this.props.cliente : {
             nome: "",
-            vesrsao: ""
+            vesrsao: "",
+            id: this.props.location.state ? this.props.location.state.id : null,
             //},
-            //token: this.props.token
+            token: this.props.token
         }
     }
 
+    componentDidMount = () => {
+        if (this.state.id) {
+            axios.get('http://localhost:1998/produtos/' + this.state.id, { headers: { authorization: this.state.token } }).then((res) => {
+                this.setState({
+                    nome: res.data.nome,
+                    versao: res.data.versao,
+                    cliente: res.data.cliente,
+                });
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    }
     handleChange = (item) => {
         this.setState({
             [item.target.name]: item.target.value
         })
     }
-
     addProduto = () => {
-        //e.preventDefault();
-        axios.post('http://localhost:1998/produtos', this.state, { headers: { authorization: this.props.token } }).then((res) => {
-            this.getAllProdutos();
-        }).catch((error) => {
-            console.log(error);
-        })
+        if (this.state.nome == "" || this.state.versao == null) {
+            alert("Favor preencher todos os campos!");
+            return;
+        }
+
+        if (this.state.id) {
+            axios.put('http://localhost:1998/produtos/' + this.state.id, this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/produtos');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+        else {
+            axios.post('http://localhost:1998/produtos', this.state, { headers: { authorization: this.props.token } }).then((res) => {
+                this.props.history.push('/produtos');
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
     }
+
 
     getAllProdutos = () => {
         getProdutos(this.state.token, (res) => {
@@ -43,8 +70,12 @@ export default class ProdutoModel extends React.Component {
     render() {
         return <div>
             <FormControl>
-                <TextField id="standard-basic" required="true" type="text" name="nome" label="Nome" onChange={this.handleChange} />
-                <TextField id="standard-basic" type="text" name="versao"label="Versão" onChange={this.handleChange} />
+                {/* label="Nome" */}
+                <TextField id="standard-basic" required="true" type="text" name="nome" value={this.state.nome} onChange={this.handleChange} />
+                Nome
+                <TextField id="standard-basic" required="true" type="text" name="versao" value={this.state.versao} onChange={this.handleChange} />
+                Versão
+                <br></br>
                 <Button onClick={this.addProduto} variant="contained" color="primary" type="submit">Adicionar</Button>
             </FormControl>
 

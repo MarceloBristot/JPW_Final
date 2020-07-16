@@ -8,11 +8,12 @@ export default class Usuarios extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            clientes: [],
+            usuarios: [],
             token: this.props.token
         }
         if (!this.state.token)
             this.props.history.push('/')
+            console.log(this.props)
     }
     componentDidMount = () => {
         this.getAllUsuarios()
@@ -21,7 +22,7 @@ export default class Usuarios extends React.Component {
     getAllUsuarios = () => {
         getUsuarios(this.state.token, (res) => {
             this.setState({
-                clientes: [...res.data]
+                usuarios: [...res.data]
             });
         }, (error) => {
             console.log(error)
@@ -30,11 +31,18 @@ export default class Usuarios extends React.Component {
     }
 
     delete = (id) => {
-        axios.delete('http://localhost:1998/clientes/' + id, { headers: { authorization: this.state.token } }).then((res) => {
+        axios.delete('http://localhost:1998/usuarios/' + id, { headers: { authorization: this.state.token } }).then((res) => {
             this.getAllUsuarios();
         }).catch((error) => {
             console.log(error);
         })
+    }
+    editar = (id) => {
+        this.props.history.push({ pathname: '/editarusuario', state: { id: id } })
+    }
+
+    adicionar = (id) => {
+        this.props.history.push('/editarusuario')
     }
 
     render() {
@@ -52,7 +60,7 @@ export default class Usuarios extends React.Component {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.clientes.map((item) => (
+                                {this.state.usuarios.map((item) => (
                                     <TableRow key={item._id}>
                                         {/* <TableCell component="th" scope="row">
                                                 {item._id}
@@ -61,12 +69,11 @@ export default class Usuarios extends React.Component {
                                         <TableCell align="center">{item.sigla}</TableCell>
                                         <TableCell align="center">{item.login}</TableCell>
                                         <TableCell align="center">
-                                            <Button type="button" variant="contained">Editar</Button>
+                                            <Button type="button" variant="contained" onClick={this.editar.bind(this, item._id)}>Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                                <UsuarioModel token={this.state.token}></UsuarioModel>
 
                             </TableBody>
                         </Table>

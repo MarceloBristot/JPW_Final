@@ -37,6 +37,14 @@ export default class Produtos extends React.Component {
         })
     }
 
+    editar = (id) => {
+        this.props.history.push({ pathname: '/editarproduto', state: { id: id } })
+    }
+
+    adicionar = (id) => {
+        this.props.history.push('/editarproduto')
+    }
+
     render() {
         return (
             <div>
@@ -47,7 +55,9 @@ export default class Produtos extends React.Component {
                                 <TableRow>
                                     <TableCell align="center">Nome</TableCell>
                                     <TableCell align="center">Versão</TableCell>
-                                    <TableCell align="center">Ações</TableCell>
+                                    <TableCell align="center">
+                                        <Button type="button" variant="contained" color="primary" onClick={this.adicionar}>Adicionar</Button>
+                                    </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -59,12 +69,12 @@ export default class Produtos extends React.Component {
                                         <TableCell align="center">{item.nome}</TableCell>
                                         <TableCell align="center">{item.versao}</TableCell>
                                         <TableCell align="center">
-                                            <Button type="button" variant="contained">Editar</Button>
+                                            <Button type="button" variant="contained" onClick={this.editar.bind(this, item._id)}>Editar</Button>
                                             <Button type="button" variant="contained" color="secondary" onClick={this.delete.bind(this, item._id)}>Excluír</Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
-                                <ProdutoModel token={this.state.token}></ProdutoModel>
+                                {/* <ProdutoModel token={this.state.token}></ProdutoModel> */}
 
                             </TableBody>
                         </Table>
